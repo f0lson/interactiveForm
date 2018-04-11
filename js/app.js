@@ -1,16 +1,3 @@
-// Variables
-const form = document.querySelector(`form`);
-const name = document.querySelector(`#name`);
-const userTitle = document.querySelector(`select#title`);
-const designSelect = document.querySelector(`select#design`);
-const colorDiv = document.querySelector(`#color-div`);
-const activities = document.querySelector(`.activities`);
-const paymentDiv = document.querySelector(`#payment-section`);
-const paymentSelect = document.querySelector(`#payment`);
-const ccDiv = paymentDiv.querySelector(`#credit-card`);
-const paypal = paymentDiv.querySelector(`#paypal`);
-const bitcoin = paymentDiv.querySelector(`#bitcoin`)
-
 // function to create new element
 const createElement = (element, prop1, val1, prop2, val2, ) => {
     let newElement = document.createElement(element);
@@ -22,7 +9,6 @@ const createElement = (element, prop1, val1, prop2, val2, ) => {
 // function to hide element on the page
 const hideElement = ( element ) => {
     element[`style`][`display`] = `none`;
-
 }
 
 // function to show the element
@@ -33,6 +19,34 @@ const showElement = ( element, value ) => {
     element[`style`][`display`] = value ;
 }
 
+// Variables
+const form = document.querySelector(`form`);
+const name = document.querySelector(`#name`);
+const userTitle = document.querySelector(`select#title`);
+const designSelect = document.querySelector(`select#design`);
+const colorDiv = document.querySelector(`#color-div`);
+const activities = document.querySelector(`.activities`);
+const activityCheckboxes = activities.querySelectorAll(`input[type=checkbox]`);
+const paymentDiv = document.querySelector(`#payment-section`);
+const paymentSelect = document.querySelector(`#payment`);
+const ccDiv = paymentDiv.querySelector(`#credit-card`);
+const paypal = paymentDiv.querySelector(`#paypal`);
+const bitcoin = paymentDiv.querySelector(`#bitcoin`);
+const tuesday1 = [];
+const tuesday9 = [];
+let cost = 0;
+
+const addToCost = ( number ) => {
+    cost += number;
+    console.log(cost);
+    return cost;
+}
+
+const subtractFromCost = ( number ) => {
+    cost -= number;
+    console.log(cost);
+    return cost;
+}
 
 // -------------------------------------
 // FORM SUBMIT EVENT HANDLER
@@ -56,6 +70,18 @@ document.addEventListener(`DOMContentLoaded`, () => {
     hideElement(ccDiv);
     hideElement(paypal);
     hideElement(bitcoin);
+
+    // sorting activities
+    for ( let i = 0; i < activityCheckboxes.length; i++ ) {
+        let activity = activityCheckboxes[i];
+
+        if ( activity.name === `js-frameworks` || activity.name === `express` ) {
+            tuesday9.push(activity);
+        }
+        if ( activity.name === `js-libs` || activity.name === `node`  ){
+            tuesday1.push(activity);
+        }
+    }
 
     // -------------------------------------
     // FORM CHANGE EVENT HANDLER
@@ -146,33 +172,67 @@ document.addEventListener(`DOMContentLoaded`, () => {
             }
         }
 
+
+        //-------------------------------------
         // SO MUCH ROOM FOR ACTIVITIES!!!
+        //-------------------------------------
 
         if ( e.target.type === `checkbox` ) {
 
             let checkbox = e.target;
             let checked = checkbox.checked;
-            let activityCheckboxes = activities.querySelectorAll(`input[type=checkbox]`);
 
+            // if box = checked do the following:
             if ( checked ) {
-                if ( e.target.value === `1`) {
-                    for ( let i = 0; i < activityCheckboxes.length; i++ ) {
-                        if ( activityCheckboxes[i][`value`] === `1` )
-                        activityCheckboxes[i][`disabled`] = true;
-                    }
-                    e.target.disabled = false;
-                    console.log(`1 PM speakers`);
-                } else if ( e.target.value === `9` ) {
-                    for ( let i = 0; i < activityCheckboxes.length; i++ ) {
-                        if ( activityCheckboxes[i][`value`] === `9` )
-                        activityCheckboxes[i][`disabled`] = true;
-                    }
-                    e.target.disabled = false;
-                    console.log(`9 AM speakers`);
+
+                // TUESDAY 9AM
+                if ( e.target.name === `js-frameworks`) {
+                    tuesday9[1].disabled = `true`;
+                    addToCost(100);
+                    console.log(`express disabled`);
+                } else if ( e.target.name === `express` ) {
+                    tuesday9[0].disabled = `true`;
+                    addToCost(100);
+                    console.log(`frameworks disabled`);
+                } else if ( e.target.name === `node` ) {
+                    tuesday1[0].disabled === `true`;
+                    addToCost(100);
+                    console.log(`libraries disabled`);
+                } else if ( e.target.name === `js-libs`) {
+                    tuesday1[1].disabled = `true`;
+                    addToCost(100);
+                    console.log(`node disabled`);
+                } else if ( e.target.name === `all` ) {
+                    addToCost(200);
                 }
-                console.log(`checked`);
-            } else {    
-                console.log(`unchecked`);
+
+                activities.appendChild(costP);
+
+            // When box = unchecked
+            } else {
+                if ( e.target.name === `js-frameworks` ) {
+                    for ( let i = 0; i < tuesday9.length; i++ ) {
+                        tuesday9[i].disabled = false;
+                    }
+                    subtractFromCost(100);
+                } else if ( e.target.name === `express` ) {
+                    for ( let i = 0; i < tuesday9.length; i++ ) {
+                        tuesday9[i].disabled = false;
+                    }
+                    subtractFromCost(100);
+                } else if ( e.target.name === `js-libs` ) {
+                    for ( let i = 0; i < tuesday1.length; i++ ) {
+                        tuesday1[i].disabled = false;
+                    }
+                    subtractFromCost(100);
+                } else if ( e.target.name === `node` ) {
+                    for ( let i = 0; i < tuesday1.length; i++ ) {
+                        tuesday1[i].disabled = false;
+                    }
+                    subtractFromCost(100);
+                } else if ( e.target.name === `all` ) {
+                    subtractFromCost(200);
+                }
             }
         }
     });
