@@ -96,6 +96,30 @@ input:focus {
 	transition: border-color .4s, background-color .4s;
 }
 
+.email {
+    position: relative;
+}
+
+.valid::after,
+.invalid::after {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 40%;
+    font-size: 20px;
+    z-index: 1000;
+}
+
+.valid::after {
+    content: '✔';
+    color: #10ac84;
+}
+
+.invalid::after {
+    content: '✖';
+    color: #ee5253;
+}
+
 input[type="checkbox"],
 input[type="radio"] {
 	display: inline-block;

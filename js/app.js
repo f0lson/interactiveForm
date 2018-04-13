@@ -22,6 +22,7 @@ const showElement = ( element, value ) => {
 // Variables
 const form = document.querySelector(`form`);
 const name = document.querySelector(`#name`);
+const email = document.querySelector(`input[type=email]`);
 const userTitle = document.querySelector(`select#title`);
 const designSelect = document.querySelector(`select#design`);
 const colorDiv = document.querySelector(`#color-div`);
@@ -35,25 +36,31 @@ const bitcoin = paymentDiv.querySelector(`#bitcoin`);
 const tuesday1 = [];
 const tuesday9 = [];
 let cost = 0;
+const costP = document.querySelector(`.total-cost`);
+const costSpan = createElement(`span`, `class`, `cost`, `textContent`, cost);
+costP.appendChild(costSpan);
 
 const addToCost = ( number ) => {
     cost += number;
-    console.log(cost);
-    return cost;
+    costSpan.textContent = cost;
 }
 
 const subtractFromCost = ( number ) => {
     cost -= number;
-    console.log(cost);
-    return cost;
+    costSpan.textContent = cost;
 }
 
 // -------------------------------------
 // FORM SUBMIT EVENT HANDLER
 // -------------------------------------
 
-form.addEventListener(`submit`, (e) => {
+form.addEventListener(`submit`, ( e ) => {
     e.preventDefault();
+    // if ( designSelect.value === `Select Theme` ) {
+    //     let label = document.querySelector(`label[for=design]`);
+    //     label.textContent = `Design: Please select a shirt design`;
+    //     label.style.color = `#ee5253`;
+    // }
 });
 
 document.addEventListener(`DOMContentLoaded`, () => {
@@ -83,6 +90,21 @@ document.addEventListener(`DOMContentLoaded`, () => {
         }
     }
 
+    hideElement(costP);
+
+    email.addEventListener(`blur`, () => {
+
+        let parent = email.parentNode;
+
+        if ( email.validity.valid ) {
+            parent.className = `email valid`;
+            console.log(`valid!`);
+        } else {
+            parent.className = `email invalid`;
+            console.log(`invalid!`);
+        }
+    });
+
     // -------------------------------------
     // FORM CHANGE EVENT HANDLER
     // -------------------------------------
@@ -90,20 +112,26 @@ document.addEventListener(`DOMContentLoaded`, () => {
     form.addEventListener(`change`, (e) => {
         // creating, appending, and removing of `Other` input[type=text]
         if (e.target.id === userTitle.id) {
-            let otherJobTitle = createElement(`input`, `type`, `text`, `placeholder`, `Please enter your job title`)
-            let parent = document.querySelectorAll(`fieldset`)[0];
-
-            if (e.target.value.toLowerCase() === `other`) {
-                parent.appendChild(otherJobTitle);
-                let otherJobInput = parent.querySelector(`input:last-child`);
-                otherJobInput.required = true;
-                console.log(`appending`);
-            } else {
-                let otherJobInput = parent.querySelector(`input:last-child`);
-                if ( otherJobInput ) {
-                    parent.removeChild(otherJobInput);
+            // storing the value of the select
+            let value = e.target.value;
+            // if the value is `other` then:
+            if ( value.toLowerCase() === `other` ) {
+                // create a new input
+                let otherInput = createElement(`input`, `type`, `text`, `placeholder`, `Your job here`);
+                // give it a class name
+                otherInput.className = `other-job`;
+                // select the fieldset
+                let basicInfo = document.querySelector(`.basic-info`);
+                basicInfo.appendChild(otherInput);
+            } else if ( value.toLowerCase() !== `other` ) {
+                let inputToRemove = document.querySelector(`.other-job`);
+                if ( inputToRemove ) {
+                    let basicInfo = document.querySelector(`.basic-info`);
+                    basicInfo.removeChild(inputToRemove);
+                    console.log(`other input is there`);
+                } else if ( inputToRemove === false ) {
+                    console.log(`nothing to remove`);
                 }
-                console.log(`removing`);
             }
         }
         // t-shirt select
@@ -185,7 +213,8 @@ document.addEventListener(`DOMContentLoaded`, () => {
             // if box = checked do the following:
             if ( checked ) {
 
-                // TUESDAY 9AM
+                showElement(costP, `block`);
+
                 if ( e.target.name === `js-frameworks`) {
                     tuesday9[1].disabled = `true`;
                     addToCost(100);
@@ -195,18 +224,20 @@ document.addEventListener(`DOMContentLoaded`, () => {
                     addToCost(100);
                     console.log(`frameworks disabled`);
                 } else if ( e.target.name === `node` ) {
-                    tuesday1[0].disabled === `true`;
+                    tuesday1[0].disabled = `true`;
                     addToCost(100);
-                    console.log(`libraries disabled`);
+                    console.log(`js-libs disabled`);
                 } else if ( e.target.name === `js-libs`) {
                     tuesday1[1].disabled = `true`;
                     addToCost(100);
                     console.log(`node disabled`);
                 } else if ( e.target.name === `all` ) {
                     addToCost(200);
+                } else if ( e.target.name === `build-tools` ) {
+                    addToCost(100);
+                } else if ( e.target.name === `npm` ) {
+                    addToCost(100);
                 }
-
-                activities.appendChild(costP);
 
             // When box = unchecked
             } else {
@@ -232,6 +263,10 @@ document.addEventListener(`DOMContentLoaded`, () => {
                     subtractFromCost(100);
                 } else if ( e.target.name === `all` ) {
                     subtractFromCost(200);
+                } else if ( e.target.name === `build-tools` ) {
+                    subtractFromCost(100);
+                } else if ( e.target.name === `npm` ) {
+                    subtractFromCost(100);
                 }
             }
         }
