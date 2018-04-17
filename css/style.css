@@ -81,6 +81,12 @@ select {
 	margin-bottom: 1.125em;
 }
 
+.input-container,
+.valid,
+.invalid {
+    position: relative;
+}
+
 input {
 	font-size: 1em;
 	font-weight: 500;
@@ -96,16 +102,12 @@ input:focus {
 	transition: border-color .4s, background-color .4s;
 }
 
-.email {
-    position: relative;
-}
-
 .valid::after,
 .invalid::after {
     display: block;
     position: absolute;
     right: 10px;
-    top: 40%;
+    top: 42%;
     font-size: 20px;
     z-index: 1000;
 }

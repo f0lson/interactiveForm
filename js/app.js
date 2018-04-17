@@ -31,6 +31,9 @@ const activityCheckboxes = activities.querySelectorAll(`input[type=checkbox]`);
 const paymentDiv = document.querySelector(`#payment-section`);
 const paymentSelect = document.querySelector(`#payment`);
 const ccDiv = paymentDiv.querySelector(`#credit-card`);
+const ccNum = paymentDiv.querySelector(`#cc-num`);
+const ccZip = paymentDiv.querySelector(`#zip`);
+const ccCVV = paymentDiv.querySelector(`#cvv`);
 const paypal = paymentDiv.querySelector(`#paypal`);
 const bitcoin = paymentDiv.querySelector(`#bitcoin`);
 const tuesday1 = [];
@@ -50,23 +53,61 @@ const subtractFromCost = ( number ) => {
     costSpan.textContent = cost;
 }
 
+const addInputValidation = ( element ) => {
+    element.addEventListener(`input`, () => {
+        let parent = element.parentNode;
+        let parentClass = parent.className;
+        if ( element.validity.valid ) {
+            if ( parentClass === `col-6 col` ) {
+                parent.classList.remove(`invalid`);
+                parent.classList.add(`valid`);
+                console.log(`contains col`);
+            } else if ( parentClass === `col-3 col` ) {
+                parent.classList.remove(`invalid`);
+                parent.classList.add(`valid`);
+            } else {
+                parent.classList.remove(`invalid`);
+                parent.classList.add(`valid`);
+            }
+        } else if ( !element.validity.valid ) {
+            if ( parentClass === `col-6 col` ) {
+                parent.classList.remove(`valid`);
+                parent.classList.add(`invalid`);
+                console.log(`contains col`);
+            } else if ( parentClass === `col-3 col` ) {
+                parent.classList.remove(`valid`);
+                parent.classList.add(`invalid`);
+            } else {
+                parent.classList.remove(`valid`);
+                parent.classList.add(`invalid`);
+            }
+        }
+
+    });
+}
+
 // -------------------------------------
 // FORM SUBMIT EVENT HANDLER
 // -------------------------------------
 
 form.addEventListener(`submit`, ( e ) => {
     e.preventDefault();
-    // if ( designSelect.value === `Select Theme` ) {
-    //     let label = document.querySelector(`label[for=design]`);
-    //     label.textContent = `Design: Please select a shirt design`;
-    //     label.style.color = `#ee5253`;
-    // }
+    let designValue = designSelect.value;
+    let designLabel = document.querySelector(`label[for=design]`);
+    if ( designValue === `Select Theme` ) {
+        console.log(designLabel);
+        designLabel.textContent = `Design: Please select a theme`;
+        designLabel.style.color = `#ee5253`;
+    }
 });
 
 document.addEventListener(`DOMContentLoaded`, () => {
 
     // add focus to name input on load
     name.focus();
+
+    addInputValidation(name);
+    addInputValidation(email);
 
     // hiding the color div
     if ( designSelect.value === `Select Theme` ) {
@@ -92,19 +133,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
     hideElement(costP);
 
-    email.addEventListener(`blur`, () => {
-
-        let parent = email.parentNode;
-
-        if ( email.validity.valid ) {
-            parent.className = `email valid`;
-            console.log(`valid!`);
-        } else {
-            parent.className = `email invalid`;
-            console.log(`invalid!`);
-        }
-    });
-
     // -------------------------------------
     // FORM CHANGE EVENT HANDLER
     // -------------------------------------
@@ -128,9 +156,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
                 if ( inputToRemove ) {
                     let basicInfo = document.querySelector(`.basic-info`);
                     basicInfo.removeChild(inputToRemove);
-                    console.log(`other input is there`);
-                } else if ( inputToRemove === false ) {
-                    console.log(`nothing to remove`);
                 }
             }
         }
@@ -149,23 +174,31 @@ document.addEventListener(`DOMContentLoaded`, () => {
             if ( e.target.value === `js puns` ) {
                 // remove the `is-hidden` class on
                 colorDiv.className = ``;
+                // set the first 3 options to display block
                 for (var i = 0; i < 3; i++) {
-                    colorOptions[i].style.display = `block`
+                    colorOptions[i].style.display = `block`;
+                    // this will set the contents of the select to display the 1st item
                     colorSelect.selectedIndex = 0;
                 }
+                // hide the last 3 options
                 for (var i = 3; i < 6; i++) {
                     colorOptions[i].style.display = `none`;
                 }
             } else if ( e.target.value === `heart js` ) {
+                // remove the `is-hidden` class
                 colorDiv.className = ``;
+                // hide the first 3 options
                 for (var i = 0; i < 3; i++) {
                     colorOptions[i].style.display = `none`
                 }
+                // display the last 3 options
                 for (var i = 3; i < 6; i++) {
                     colorOptions[i].style.display = `block`;
+                    // this will set the contents of the select to display the 4th item
                     colorSelect.selectedIndex = 3;
                 }
             } else {
+                // if it's not puns or heart theme, hide the colorDiv
                 colorDiv.className = `is-hidden`;
             }
 
@@ -179,6 +212,9 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
             if ( e.target.value === `credit card` ) {
                 showElement(ccDiv, `block`);
+                addInputValidation(ccNum);
+                addInputValidation(ccZip);
+                addInputValidation(ccCVV);
                 hideElement(paypal);
                 hideElement(bitcoin);
                 console.log(`credit card info shown`);
