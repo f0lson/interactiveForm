@@ -96,23 +96,8 @@ input:focus {
     transition: border-color .4s, background-color .4s;
 }
 
-.valid::after, .invalid::after {
-    display: block;
-    position: absolute;
-    right: 10px;
-    top: 42%;
-    font-size: 20px;
-    z-index: 1000;
-}
-
-.valid::after {
-    content: '✔';
-    color: #10ac84;
-}
-
-.invalid::after {
-    content: '✖';
-    color: #ee5253;
+input:valid {
+    border-color: #10ac84;
 }
 
 input[type="checkbox"], input[type="radio"] {

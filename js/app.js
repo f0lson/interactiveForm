@@ -38,15 +38,11 @@ document.addEventListener(`DOMContentLoaded`, () => {
     const paypal = paymentDiv.querySelector(`#paypal`);
     // the bitcoin payment inpformation
     const bitcoin = paymentDiv.querySelector(`#bitcoin`);
-    // empty array for activities on Tuesday @ 1PM
-    const tuesday1 = [];
-    // empty array for activities on Tuesday @ 9AM
-    const tuesday9 = [];
     // the value of the cost of the activities
     let cost = 0;
+    // cost paragraph
     const costP = document.querySelector(`.total-cost`);
-    const costSpan = createElement(`span`, `class`, `cost`, `textContent`, cost);
-    costP.appendChild(costSpan);
+    // register button
     const registerBtn = document.querySelector(`button[type=submit]`);
 
 
@@ -56,7 +52,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
     // function to create new element
     const createElement = ( element, prop1, val1, prop2, val2 ) => {
-        let newElemenet = document.createElement(element);
+        let newElement = document.createElement(element);
         newElement[prop1] = val1;
         newElement[prop2] = val2;
         return newElement;
@@ -143,49 +139,15 @@ document.addEventListener(`DOMContentLoaded`, () => {
     hideElement(paypal);
     hideElement(bitcoin);
 
+    // create span element to house activities sum
+    const costSpan = createElement(`span`, `class`, `cost`, `textContent`, cost);
+
+    // append to the cost paragraph
+    costP.appendChild(costSpan);
+
     // hide the cost
     hideElement(costP);
 
-});
-
-// -------------------------------------
-// form submit validation
-// -------------------------------------
-
-form.addEventListener( `submit`, (e) => {
-    e.preventDefault();
-    formSubmitValidation();
-});
-
-document.addEventListener(`DOMContentLoaded`, () => {
-
-    // hiding the color div
-    // if ( designSelect.value === `Select Theme` ) {
-    //     colorDiv.className = `is-hidden`;
-    // }
-
-    // hide the other input other input
-    // hideElement(otherJobInput);
-    //
-    // // hiding cc, paypal, & bitcoin
-    // hideElement(ccDiv);
-    // hideElement(paypal);
-    // hideElement(bitcoin);
-
-    // hiding the cost of the activities
-    hideElement(costP);
-
-    // sorting activities
-    for ( let i = 0; i < activityCheckboxes.length; i++ ) {
-        let activity = activityCheckboxes[i];
-
-        if ( activity.name === `js-frameworks` || activity.name === `express` ) {
-            tuesday9.push(activity);
-        }
-        if ( activity.name === `js-libs` || activity.name === `node`  ){
-            tuesday1.push(activity);
-        }
-    }
 
     // -------------------------------------
     // FORM CHANGE EVENT HANDLER
@@ -252,9 +214,18 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
         }
 
-        //-------------------------------------
+        // breaking down the activities
+        let main = activityCheckboxes[0];
+        let jsFrameworks = activityCheckboxes[1];
+        let jsLibs = activityCheckboxes[2];
+        let express = activityCheckboxes[3];
+        let node = activityCheckboxes[4];
+        let buildTools = activityCheckboxes[5];
+        let npm = activityCheckboxes[6];
+
+        // -------------------------------------
         // Activities
-        //-------------------------------------
+        // -------------------------------------
 
         if ( e.target.type === `checkbox` ) {
 
@@ -267,23 +238,23 @@ document.addEventListener(`DOMContentLoaded`, () => {
                 showElement(costP, `block`);
 
                 if ( e.target.name === `js-frameworks`) {
-                    tuesday9[1].disabled = `true`;
-                    tuesday9[1].parentNode.style.color = `gray`;
+                    express.disabled = `true`;
+                    express.parentNode.style.color = `gray`;
                     addToCost(100);
                     console.log(`express disabled`);
                 } else if ( e.target.name === `express` ) {
-                    tuesday9[0].disabled = `true`;
-                    tuesday9[0].parentNode.style.color = `gray`;
+                    jsFrameworks.disabled = `true`;
+                    jsFrameworks.parentNode.style.color = `gray`;
                     addToCost(100);
                     console.log(`frameworks disabled`);
                 } else if ( e.target.name === `node` ) {
-                    tuesday1[0].disabled = `true`;
-                    tuesday1[0].parentNode.style.color = `gray`;
+                    jsLibs.disabled = `true`;
+                    jsLibs.parentNode.style.color = `gray`;
                     addToCost(100);
                     console.log(`js-libs disabled`);
                 } else if ( e.target.name === `js-libs`) {
-                    tuesday1[1].disabled = `true`;
-                    tuesday1[1].parentNode.style.color = `gray`;
+                    node.disabled = `true`;
+                    node.parentNode.style.color = `gray`;
                     addToCost(100);
                     console.log(`node disabled`);
                 } else if ( e.target.name === `all` ) {
@@ -297,28 +268,20 @@ document.addEventListener(`DOMContentLoaded`, () => {
             // When box = unchecked
             } else {
                 if ( e.target.name === `js-frameworks` ) {
-                    for ( let i = 0; i < tuesday9.length; i++ ) {
-                        tuesday9[i].disabled = false;
-                        tuesday9[i].parentNode.style.color = `#000`;
-                    }
+                    express.disabled = false;
+                    express.parentNode.style.color = `#000`;
                     subtractFromCost(100);
                 } else if ( e.target.name === `express` ) {
-                    for ( let i = 0; i < tuesday9.length; i++ ) {
-                        tuesday9[i].disabled = false;
-                        tuesday9[i].parentNode.style.color = `#000`;
-                    }
+                    jsFrameworks.disabled = false;
+                    jsFrameworks.parentNode.style.color = `#000`;
                     subtractFromCost(100);
                 } else if ( e.target.name === `js-libs` ) {
-                    for ( let i = 0; i < tuesday1.length; i++ ) {
-                        tuesday1[i].disabled = false;
-                        tuesday1[i].parentNode.style.color = `#000`;
-                    }
+                    node.disabled = false;
+                    node.parentNode.style.color = `#000`;
                     subtractFromCost(100);
                 } else if ( e.target.name === `node` ) {
-                    for ( let i = 0; i < tuesday1.length; i++ ) {
-                        tuesday1[i].disabled = false;
-                        tuesday1[i].parentNode.style.color = `#000`;
-                    }
+                    jsLibs.disabled = false;
+                    jsLibs.parentNode.style.color = `#000`;
                     subtractFromCost(100);
                 } else if ( e.target.name === `all` ) {
                     subtractFromCost(200);
@@ -328,6 +291,11 @@ document.addEventListener(`DOMContentLoaded`, () => {
                     subtractFromCost(100);
                 }
             }
+        }
+
+        // if there are no activities checked, then cost = 0 and needs to be hidden
+        if ( cost === 0 ) {
+            hideElement(costP);
         }
 
         // PAYMENT SECTION
