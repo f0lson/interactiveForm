@@ -25,12 +25,12 @@
 
                 <div class="input-container">
                     <label for="name">Name:</label>
-                    <input type="text" id="name" name="user_name" minlength="3" required autofocus>
+                    <input type="text" id="name" name="user_name" placeholder="Please type your name" autofocus>
                 </div>
 
                 <div class="input-container">
                     <label for="mail">Email:</label>
-                    <input type="email" id="mail" name="user_email" minlength="1" required>
+                    <input type="email" id="mail" name="user_email" placeholder="eg. example@example.com">
                 </div>
 
                 <label for="title">Job Role</label>
@@ -42,7 +42,7 @@
                   <option value="student">Student</option>
                   <option value="other">Other</option>
                 </select>
-                <input class="other-job" type="text" placeholder="Your job title">
+                <input id="other-title" type="text" placeholder="Your Job Role">
             </fieldset>
 
             <fieldset class="shirt">
@@ -96,7 +96,7 @@
 
                 <label for="payment">I'm going to pay with:</label>
                 <select id="payment" name="user_payment">
-                    <option value="select_method">Select Payment Method</option>
+                    <option value="select_method" disabled>Select Payment Method</option>
                     <option value="credit card">Credit Card</option>
                     <option value="paypal">PayPal</option>
                     <option value="bitcoin">Bitcoin</option>
@@ -106,21 +106,21 @@
 
                     <div class="col-6 col">
                         <label for="cc-num">Card Number:</label>
-                        <input id="cc-num" name="user_cc-num" type="text" minlength="13" maxlength="16">
+                        <input id="cc-num" name="user_cc-num" type="text" placeholder="eg. 123456789123456">
                     </div>
 
                     <div class="col-3 col">
                         <label for="zip">Zip Code:</label>
-                        <input id="zip" name="user_zip" type="text" minlength="5" maxlength="5">
+                        <input id="zip" name="user_zip" type="text" placeholder="eg. 12345">
                     </div>
 
                     <div class="col-3 col">
                         <label for="cvv">CVV:</label>
-                        <input id="cvv" name="user_cvv" type="text" minlength="3" maxlength="3">
+                        <input id="cvv" name="user_cvv" type="text" placeholder="eg. 123">
                     </div>
 
                     <label for="exp-month">Expiration Date:</label>
-                    <select id="exp-month" name="user_exp-month">
+                    <select id="exp-month" name="user_exp-month" required>
                         <option value="1">1 - January</option>
                         <option value="2">2 - February</option>
                         <option value="3">3 - March</option>
@@ -135,7 +135,7 @@
                         <option value="12">12 - December</option>
                     </select>
                     <label for="exp-year">Expiration Year:</label>
-                    <select id="exp-year" name="user_exp-year">
+                    <select id="exp-year" name="user_exp-year" required>
                         <option value="2016">2016</option>
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>

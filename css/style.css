@@ -96,7 +96,7 @@ input:focus {
     transition: border-color .4s, background-color .4s;
 }
 
-input:valid {
+.valid {
     border-color: #10ac84;
 }
 
@@ -110,10 +110,46 @@ button {
     background: #22627e;
     margin: 1.25em 0 .5em;
     cursor: pointer;
+    position: relative;
 }
 
 button:hover {
     background: #184c62;
+}
+
+.invalid-btn {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    outline: none;
+}
+
+.invalid-btn:focus {
+    outline: none;
+}
+
+.valid-btn {
+    background-color: #10ac84;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 5px);
+    background-color: #e74c3c;
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 
 /* =================================
