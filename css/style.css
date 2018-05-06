@@ -77,8 +77,26 @@ input, select {
     margin-bottom: 1.125em;
 }
 
-.input-container, .valid, .invalid {
+.input-container, .real-time-valid, .real-time-invalid {
     position: relative;
+}
+
+.real-time-valid::before,
+.real-time-invalid::before {
+    position: absolute;
+    display: block;
+    top: 45%;
+    right: 10px;
+}
+
+.real-time-valid::before {
+    content: '✔';
+    color: #10ac84;
+}
+
+.real-time-invalid::before {
+    content: '✖';
+    color: #e74c3c;
 }
 
 input {

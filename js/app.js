@@ -98,38 +98,158 @@ const invalid = ( label, input, msg ) => {
 }
 
 const realTimeValidation = ( element ) => {
-    element.addEventListener(`input`, () => {
+    element.addEventListener(`keyup`, () => {
         let parent = element.parentNode;
         let parentClass = parent.className;
-        if ( element.validity.valid ) {
-            if ( parentClass === `col-6 col` ) {
-                parent.classList.remove(`invalid`);
-                parent.classList.add(`valid`);
-                console.log(`contains col`);
-            } else if ( parentClass === `col-3 col` ) {
-                parent.classList.remove(`invalid`);
-                parent.classList.add(`valid`);
-            } else {
-                parent.classList.remove(`invalid`);
-                parent.classList.add(`valid`);
+        let elementValue = element.value;
+        let label = element.previousElementSibling;
+
+        if ( element.type === `email` ) {
+            let emailTest = (string) => {
+                return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
             }
-        } else if ( !element.validity.valid ) {
-            if ( parentClass === `col-6 col` ) {
-                parent.classList.remove(`valid`);
-                parent.classList.add(`invalid`);
-                console.log(`contains col`);
-            } else if ( parentClass === `col-3 col` ) {
-                parent.classList.remove(`valid`);
-                parent.classList.add(`invalid`);
+            if ( emailTest(elementValue) ) {
+                valid(label, element, `Email:`);
+                parent.classList.remove(`real-time-invalid`);
+                parent.classList.add(`real-time-valid`);
+                return true;
             } else {
-                parent.classList.remove(`valid`);
-                parent.classList.add(`invalid`);
+                invalid(label, element, `Email: (Please enter a valid email)`);
+                parent.classList.remove(`real-time-valid`);
+                parent.classList.add(`real-time-invalid`);
+                return false;
+            }
+            console.log(`email`);
+        }
+        if ( element.type === `text` ) {
+            if ( element.id === `name` ) {
+                // NAME INPUT
+                if ( elementValue.length === 0 ) {
+                    invalid(label, element, `Name: (Please enter your name.)`);
+                    parent.classList.remove(`real-time-valid`);
+                    parent.classList.add(`real-time-invalid`);
+                    return false;
+                } else {
+                    valid(label, element, `Name:`);
+                    parent.classList.remove(`real-time-invalid`);
+                    parent.classList.add(`real-time-valid`);
+                    return true;
+                }
+            }
+            if ( element.id === `cc-num` ) {
+                let ccNumTest = (string) => {return /(^\d{13,15}$)/.test(string)};
+                if ( ccNumTest(elementValue) ) {
+                    valid(label, element, `Card Number:`);
+                    return true;
+                } else {
+                    //UPDATE WITH iNVALID FUNCTION
+                    element.placeholder = `Must be a 13-15 digit number`;
+                    invalid(label, element, `Card Number:`);
+                    return false;
+                }
+            }
+            if ( element.id === `zip`) {
+                let ccZipTest = (string) => {return /^\d{5}$/.test(string);}
+                if ( ccZipTest(elementValue) ) {
+                    label.style.color = `#000`;
+                    element.style.borderColor = validGreen;
+                    return true;
+                } else {
+                    element.style.borderColor = errorRed;
+                    label.style.color = errorRed;
+                    element.placeholder = `Must be 5 digits`;
+                    return false;
+                }
+            }
+            if ( element.id === `cvv` ) {
+                let ccCVVTest = (string) => { return /^\d{3}$/.test(string);}
+                if ( ccCVVTest(elementValue) ) {
+                    valid(label, elementValue);
+                } else {
+                    element.style.borderColor = errorRed;
+                    label.style.color = errorRed;
+                    element.placeholder = `Must be 3 digits`;
+                    return false;
+                }
             }
         }
-
     });
 }
 
+const checkInputs = ( element ) => {
+    let testInput = element;
+    let testInputValue = testInput.value;
+    let testInputParent = testInput.parentNode;
+    let label = testInput.previousElementSibling;
+    if ( testInput.type === `email` ) {
+        let emailTest = (string) => {
+            return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
+        }
+        if ( emailTest(testInputValue) ) {
+            valid(label, testInput, `Email:`);
+            return true;
+        } else {
+            invalid(label, testInput, `Email: (Please enter a valid email)`);
+            return false;
+        }
+        console.log(`email`);
+    }
+    if ( testInput.type === `text` ) {
+        if ( testInput.id === `name` ) {
+            // NAME INPUT
+            if ( testInputValue.length === 0 ) {
+                invalid(label, testInput, `Name: (Please enter your name.)`);
+                return false;
+            } else if ( testInputValue === "" ) {
+                invalid(label, testInput, `Name: (This field cannot be left blank)`);
+                return false;
+            } else {
+                valid(label, testInput, `Name:`);
+                return true;
+            }
+        }
+        if ( testInput.id === `other-title` && testInputValue.length === 0 && userTitle.selectedIndex === 5 ) {
+            let jobRoleLabel = document.querySelector(`label[for=title]`);
+            invalid(jobRoleLabel, testInput, `Job Role (Please enter your job title)`);
+        }
+        if ( testInput.id === `cc-num` ) {
+            let ccNumTest = (string) => {return /(^\d{13,15}$)/.test(string)};
+            if ( ccNumTest(testInputValue) ) {
+                valid(label, testInput, `Card Number:`);
+                return true;
+            } else {
+                //UPDATE WITH iNVALID FUNCTION
+                testInput.placeholder = `Must be a 13-15 digit number`;
+                invalid(label, testInput, `Card Number:`);
+                return false;
+            }
+        }
+        if ( testInput.id === `zip`) {
+            let ccZipTest = (string) => {return /^\d{5}$/.test(string);}
+            if ( ccZipTest(testInputValue) ) {
+                label.style.color = `#000`;
+                testInput.style.borderColor = validGreen;
+                return true;
+            } else {
+                testInput.style.borderColor = errorRed;
+                label.style.color = errorRed;
+                testInput.placeholder = `Must be 5 digits`;
+                return false;
+            }
+        }
+        if ( testInput.id === `cvv` ) {
+            let ccCVVTest = (string) => { return /^\d{3}$/.test(string);}
+            if ( ccCVVTest(testInputValue) ) {
+                valid(label, testInput);
+            } else {
+                testInput.style.borderColor = errorRed;
+                label.style.color = errorRed;
+                testInput.placeholder = `Must be 3 digits`;
+                return false;
+            }
+        }
+    }
+}
 
 // checking to see if at least 1 activity is selected
 const checkActivities = () => {
@@ -177,9 +297,6 @@ costP.appendChild(costSpan);
 // hide the cost
 hideElement(costP);
 
-// adding real-time validation
-realTimeValidation(name);
-realTimeValidation(email);
 
 // -------------------------------------
 // FORM CHANGE EVENT HANDLER
@@ -373,6 +490,11 @@ registerBtn.addEventListener(`click`, (e) => {
     // running tests on inputs
     let nameTest = checkInputs(name);
     let emailTest = checkInputs(email);
+
+    if ( designSelect.selectedIndex === 0 ) {
+        let designLabel = designSelect.previousElementSibling;
+        designLabel.textContent = `Design: (Please select a design)`;
+    }
 
     let activitiesTest = checkActivities();
 
