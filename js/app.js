@@ -1,45 +1,25 @@
 //===============================
 // Global Variables
 //===============================
-// the <form> element
 const form = document.getElementsByTagName(`form`)[0];
-// the name <input> field
 const name = document.querySelector(`#name`);
-// the email <input> field
 const email = document.querySelector(`input[type=email]`);
-// the job title <select>
 const userTitle = document.querySelector(`select#title`);
-// the other job description <input>
 const otherJobInput = document.querySelector(`#other-title`);
-// the design <select>
 const designSelect = document.querySelector(`select#design`);
-// the <div> housing the color <label> & <select>
 const colorDiv = document.querySelector(`#color-div`);
-// the activities <fieldset>
 const activities = document.querySelector(`.activities`);
-// all of the activity <input> checkboxes
 const activityCheckboxes = activities.querySelectorAll(`input[type=checkbox]`);
-// the payment <fieldset>
 const paymentDiv = document.querySelector(`#payment-section`);
-// the payment <select>
 const paymentSelect = document.querySelector(`#payment`);
-// the cc <div>
 const ccDiv = paymentDiv.querySelector(`#credit-card`);
-// the cc number <input>
 const ccNum = paymentDiv.querySelector(`#cc-num`);
-// the cc zip code <input>
 const ccZip = paymentDiv.querySelector(`#zip`);
-// the cc CVV code <input>
 const ccCVV = paymentDiv.querySelector(`#cvv`);
-// the paypal payment information
 const paypal = paymentDiv.querySelector(`#paypal`);
-// the bitcoin payment inpformation
 const bitcoin = paymentDiv.querySelector(`#bitcoin`);
-// the value of the cost of the activities
 let cost = 0;
-// cost paragraph
 const costP = document.querySelector(`.total-cost`);
-// register button
 const registerBtn = document.querySelector(`button[type=submit]`);
 const validGreen = `#10ac84`;
 const errorRed = `#e74c3c`;
@@ -55,6 +35,9 @@ const createElement = ( element, prop1, val1, prop2, val2 ) => {
     newElement[prop2] = val2;
     return newElement;
 }
+// required asterisk
+const required = createElement(`span`, `textContent`, `*`, `className`, `required`);
+
 // function to hide element on the page
 const hideElement = ( element ) => {
     element[`style`][`display`] = `none`;
@@ -86,6 +69,20 @@ const invalid = ( label, input, msg ) => {
     label.style.color = errorRed;
     label.innerHTML = msg;
 }
+
+const validForm = () => {
+    alert(`You've successfully registered!`);
+    registerBtn.classList.remove(`invalid-btn`);
+    form.submit();
+}
+
+const invalidForm = () => {
+    registerBtn.classList.add(`invalid-btn`);
+    registerBtn.addEventListener(`animationend`, () => {
+        registerBtn.classList.remove(`invalid-btn`);
+    });
+}
+
 const realTimeValidation = ( element ) => {
     element.addEventListener(`keyup`, () => {
         let parent = element.parentNode;
@@ -98,7 +95,6 @@ const realTimeValidation = ( element ) => {
             }
             if ( emailTest(elementValue) ) {
                 valid(label, element, `Email:`);
-                let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                 label.appendChild(required);
                 parent.classList.remove(`real-time-invalid`);
                 parent.classList.add(`real-time-valid`);
@@ -120,7 +116,6 @@ const realTimeValidation = ( element ) => {
                     return false;
                 } else {
                     valid(label, element, `Name:`);
-                    let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                     label.appendChild(required);
                     parent.classList.remove(`real-time-invalid`);
                     parent.classList.add(`real-time-valid`);
@@ -131,7 +126,6 @@ const realTimeValidation = ( element ) => {
                 let ccNumTest = (string) => {return /(^\d{13,16}$)/.test(string)};
                 if ( ccNumTest(elementValue) ) {
                     valid(label, element, `Card Number:`);
-                    let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                     label.appendChild(required);
                     parent.classList.remove(`real-time-invalid`);
                     parent.classList.add(`real-time-valid`);
@@ -151,7 +145,6 @@ const realTimeValidation = ( element ) => {
                     parent.classList.remove(`real-time-invalid`);
                     parent.classList.add(`real-time-valid`);
                     valid(label, element, `Zip Code:`);
-                    let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                     label.appendChild(required);
                     return true;
                 } else {
@@ -168,7 +161,6 @@ const realTimeValidation = ( element ) => {
                     parent.classList.remove(`real-time-invalid`);
                     parent.classList.add(`real-time-valid`);
                     valid(label, element, `CVV:`);
-                    let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                     label.appendChild(required);
                 } else {
                     invalid(label, element, `CVV:*`);
@@ -196,7 +188,6 @@ const checkInputs = ( element ) => {
         }
         if ( emailTest(testInputValue) ) {
             valid(label, testInput, `Email:`);
-            let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
             label.appendChild(required);
             return true;
         } else if ( testInputValue.length === 0 ) {
@@ -219,7 +210,6 @@ const checkInputs = ( element ) => {
                 return false;
             }  else {
                 valid(label, testInput, `Name:`);
-                let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                 label.appendChild(required);
                 return true;
             }
@@ -231,7 +221,6 @@ const checkInputs = ( element ) => {
                 return false;
             } else {
                 valid(jobRoleLabel, testInput, `Job Role:`);
-                let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                 jobRoleLabel.appendChild(required);
                 return true;
             }
@@ -240,7 +229,6 @@ const checkInputs = ( element ) => {
             let ccNumTest = (string) => {return /(^\d{13,16}$)/.test(string)};
             if ( ccNumTest(testInputValue) ) {
                 valid(label, testInput, `Card Number:`);
-                let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                 label.appendChild(required);
                 return true;
             } else {
@@ -253,7 +241,6 @@ const checkInputs = ( element ) => {
             let ccZipTest = (string) => {return /^\d{5}$/.test(string);}
             if ( ccZipTest(testInputValue) ) {
                 valid(label, testInput, `Zip Code:`);
-                let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                 label.appendChild(required);
                 return true;
             } else {
@@ -266,7 +253,6 @@ const checkInputs = ( element ) => {
             let ccCVVTest = (string) => { return /^\d{3}$/.test(string);}
             if ( ccCVVTest(testInputValue) ) {
                 valid(label, testInput, `CVV:`);
-                let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
                 label.appendChild(required);
                 return true;
             } else {
@@ -296,8 +282,6 @@ let checkDesign = () => {
         designLabel.textContent = `Design:`;
         // reset the label color to the default
         designLabel.style.color = `#000`;
-        // create the required asterisk
-        let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
         // append required asterisk to design label
         designLabel.appendChild(required);
         // return true
@@ -322,7 +306,6 @@ const checkActivities = () => {
             // resetting the label's default styles and textcontent & adding required asterisk
             activitiesLabel.style.color = `#184f68`;
             activitiesLabel.textContent = `Register for Activities`;
-            let required = createElement(`span`, `textContent`, `*`, `className`, `required`);
             activitiesLabel.appendChild(required);
         }
     }
@@ -581,95 +564,47 @@ form.addEventListener(`change`, (e) => {
 registerBtn.addEventListener(`click`, (e) => {
     // prevent the form from submitting by default
     e.preventDefault();
+    // tests
+    let nameTest = checkInputs(name);
+    let emailTest = checkInputs(email);
+    let activitiesTest = checkActivities();
+    let designTest = checkDesign();
+
     // CC selected but didn't select "Other" for job role
     if ( paymentSelect.selectedIndex === 1 && userTitle.selectedIndex !== 5 ) {
-        let nameTest = checkInputs(name);
-        let emailTest = checkInputs(email);
-        let activitiesTest = checkActivities();
-        let designTest = checkDesign();
         let ccNumTest = checkInputs(ccNum);
         let ccZipTest = checkInputs(ccZip);
         let ccCVVTest = checkInputs(ccCVV);
-        // test everything but the otherJobInput
-        // if all return true:
         if ( nameTest && emailTest && designTest && activitiesTest && ccNumTest && ccZipTest && ccCVVTest ) {
-            // alert dialog box appears that says "Form successfully submitted!"
-            alert(`You've successfully registered!`);
-            // remove the invalid-btn class from the btn
-            registerBtn.classList.remove(`invalid-btn`);
-            // submit the form
-            form.submit();
+            validForm();
         } else {
-            // if not all of them return true:
-            // add the invalid-btn class which will make the btn shake and turn red
-            registerBtn.classList.add(`invalid-btn`);
-            // after the animation is complete
-            registerBtn.addEventListener(`animationend`, () => {
-                // remove the invalid-btn class
-                registerBtn.classList.remove(`invalid-btn`);
-            });
+            invalidForm();
         }
     // no cc and no other job role
     } else if ( paymentSelect.selectedIndex !== 1 && userTitle.selectedIndex !== 5) {
-        // run tests on default required fields:
-        let nameTest = checkInputs(name);
-        let emailTest = checkInputs(email);
-        let activitiesTest = checkActivities();
-        let designTest = checkDesign();
-
-        // if all tests return true:
         if ( nameTest && emailTest && designTest && activitiesTest ) {
-            // alert user form has been successfully submitted
-            alert(`You've successfully registered!`);
-            // remove the invalid-btn class
-            registerBtn.classList.remove(`invalid-btn`);
-            // submit the form
-            form.submit();
+            validForm();
         } else {
-            // if not all of them return true:
-            // add the invalid-btn class which will make the btn shake and turn red
-            registerBtn.classList.add(`invalid-btn`);
-            // after the animation is complete
-            registerBtn.addEventListener(`animationend`, () => {
-                // remove the invalid-btn class
-                registerBtn.classList.remove(`invalid-btn`);
-            });
+            invalidForm();
         }
-        // other job but not credit card
+    // other job but not credit card
     } else if ( paymentSelect.selectedIndex !== 1 && userTitle.selectedIndex === 5 ){
-        let nameTest = checkInputs(name);
-        let emailTest = checkInputs(email);
-        let activitiesTest = checkActivities();
-        let designTest = checkDesign();
         let otherJobTest = checkInputs(otherJobInput);
         if ( nameTest && emailTest && designTest && activitiesTest && otherJobTest) {
-            alert(`You've successfully registered!`);
-            registerBtn.classList.remove(`invalid-btn`);
-            form.submit();
+            validForm();
         } else {
-            registerBtn.classList.add(`invalid-btn`);
-            registerBtn.addEventListener(`animationend`, () => {
-                registerBtn.classList.remove(`invalid-btn`);
-            });
+            invalidForm();
         }
+    // CC & Other Job selected
     } else if ( paymentSelect.selectedIndex === 1 && userTitle.selectedIndex === 5 ){
-        let nameTest = checkInputs(name);
-        let emailTest = checkInputs(email);
-        let activitiesTest = checkActivities();
-        let designTest = checkDesign();
-        let otherJobTest = checkInputs(otherJobInput);
         let ccNumTest = checkInputs(ccNum);
         let ccZipTest = checkInputs(ccZip);
         let ccCVVTest = checkInputs(ccCVV);
+        let otherJobTest = checkInputs(otherJobInput);
         if ( nameTest && emailTest && designTest && activitiesTest && otherJobTest && ccNumTest && ccZipTest && ccCVVTest ) {
-            alert(`You've successfully registered!`);
-            registerBtn.classList.remove(`invalid-btn`);
-            form.submit();
+            validForm();
         } else {
-            registerBtn.classList.add(`invalid-btn`);
-            registerBtn.addEventListener(`animationend`, () => {
-                registerBtn.classList.remove(`invalid-btn`);
-            });
+            invalidForm();
         }
     }
 });
