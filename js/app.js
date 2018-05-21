@@ -43,9 +43,6 @@ const hideElement = ( element ) => {
     element[`style`][`display`] = `none`;
 }
 // funciton to show the Element
-// accepts 2 arguments:
-// 1. element = element we want to show
-// 2. value = how we want to display element (block, flex, etc...)
 const showElement = ( element, value ) => {
     element[`style`][`display`] = value;
 }
@@ -59,15 +56,26 @@ const subtractFromCost = ( number ) => {
     cost -= number;
     costSpan.textContent = cost;
 }
-const valid = ( label, input, msg ) => {
+// valid styling for inputs
+const valid = ( input, msg ) => {
+    let parent = input.parentNode;
+    let label = input.previousElementSibling;
     label.style.color = `#000`;
     label.innerHTML = msg;
     input.style.borderColor = validGreen;
+    label.appendChild(required);
+    parent.classList.remove(`real-time-invalid`);
+    parent.classList.add(`real-time-valid`);
 }
-const invalid = ( label, input, msg ) => {
-    input.style.borderColor = errorRed;
+
+const invalid = ( input, msg ) => {
+    let parent = input.parentNode;
+    let label = input.previousElementSibling;
     label.style.color = errorRed;
     label.innerHTML = msg;
+    input.style.borderColor = errorRed;
+    parent.classList.remove(`real-time-valid`);
+    parent.classList.add(`real-time-invalid`);
 }
 
 const validForm = () => {
@@ -83,26 +91,20 @@ const invalidForm = () => {
     });
 }
 
+
 const realTimeValidation = ( element ) => {
     element.addEventListener(`keyup`, () => {
-        let parent = element.parentNode;
         let elementValue = element.value;
-        let label = element.previousElementSibling;
 
         if ( element.type === `email` ) {
             let emailTest = (string) => {
                 return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
             }
             if ( emailTest(elementValue) ) {
-                valid(label, element, `Email:`);
-                label.appendChild(required);
-                parent.classList.remove(`real-time-invalid`);
-                parent.classList.add(`real-time-valid`);
+                valid(element, `Email:`);
                 return true;
             } else {
-                invalid(label, element, `Email:* (Please enter a valid email)`);
-                parent.classList.remove(`real-time-valid`);
-                parent.classList.add(`real-time-invalid`);
+                invalid(element, `Email:* (Please enter a valid email)`);
                 return false;
             }
         }
@@ -110,47 +112,32 @@ const realTimeValidation = ( element ) => {
             if ( element.id === `name` ) {
                 // NAME INPUT
                 if ( elementValue.length === 0 ) {
-                    invalid(label, element, `Name:* (This field cannot be left blank)`);
-                    parent.classList.remove(`real-time-valid`);
-                    parent.classList.add(`real-time-invalid`);
+                    invalid(element, `Name:* (This field cannot be left blank)`);
                     return false;
                 } else {
-                    valid(label, element, `Name:`);
-                    label.appendChild(required);
-                    parent.classList.remove(`real-time-invalid`);
-                    parent.classList.add(`real-time-valid`);
+                    valid(element, `Name:`);
                     return true;
                 }
             }
             if ( element.id === `cc-num` ) {
                 let ccNumTest = (string) => {return /(^\d{13,16}$)/.test(string)};
                 if ( ccNumTest(elementValue) ) {
-                    valid(label, element, `Card Number:`);
-                    label.appendChild(required);
-                    parent.classList.remove(`real-time-invalid`);
-                    parent.classList.add(`real-time-valid`);
+                    valid(element, `Card Number:`);
                     return true;
                 } else {
                     //UPDATE WITH iNVALID FUNCTION
                     element.placeholder = `Must be a 13-16 digit number`;
-                    invalid(label, element, `Card Number:*`);
-                    parent.classList.remove(`real-time-valid`);
-                    parent.classList.add(`real-time-invalid`);
+                    invalid(element, `Card Number:*`);
                     return false;
                 }
             }
             if ( element.id === `zip`) {
                 let ccZipTest = (string) => {return /^\d{5}$/.test(string);}
                 if ( ccZipTest(elementValue) ) {
-                    parent.classList.remove(`real-time-invalid`);
-                    parent.classList.add(`real-time-valid`);
-                    valid(label, element, `Zip Code:`);
-                    label.appendChild(required);
+                    valid(element, `Zip Code:`);
                     return true;
                 } else {
-                    invalid(label, element, `Zip Code:*`);
-                    parent.classList.remove(`real-time-valid`);
-                    parent.classList.add(`real-time-invalid`);
+                    invalid(element, `Zip Code:*`);
                     element.placeholder = `Must be 5 digits`;
                     return false;
                 }
@@ -158,14 +145,10 @@ const realTimeValidation = ( element ) => {
             if ( element.id === `cvv` ) {
                 let ccCVVTest = (string) => { return /^\d{3}$/.test(string);}
                 if ( ccCVVTest(elementValue) ) {
-                    parent.classList.remove(`real-time-invalid`);
-                    parent.classList.add(`real-time-valid`);
-                    valid(label, element, `CVV:`);
+                    valid(element, `CVV:`);
                     label.appendChild(required);
                 } else {
-                    invalid(label, element, `CVV:*`);
-                    parent.classList.remove(`real-time-valid`);
-                    parent.classList.add(`real-time-invalid`);
+                    invalid(element, `CVV:*`);
                     element.placeholder = `Must be 3 digits`;
                     return false;
                 }
@@ -180,37 +163,33 @@ const realTimeValidation = ( element ) => {
 const checkInputs = ( element ) => {
     let testInput = element;
     let testInputValue = testInput.value;
-    let testInputParent = testInput.parentNode;
     let label = testInput.previousElementSibling;
     if ( testInput.type === `email` ) {
         let emailTest = (string) => {
             return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
         }
         if ( emailTest(testInputValue) ) {
-            valid(label, testInput, `Email:`);
-            label.appendChild(required);
+            valid(testInput, `Email:`);
             return true;
         } else if ( testInputValue.length === 0 ) {
-            invalid(label, testInput, `Email:* (This field cannot be left blank)`);
+            invalid(testInput, `Email:* (This field cannot be left blank)`);
             return false;
         } else {
-            invalid(label, testInput, `Email:* (Please enter a valid email)`);
+            invalid(testInput, `Email:* (Please enter a valid email)`);
             return false;
         }
-        console.log(`email`);
     }
     if ( testInput.type === `text` ) {
         if ( testInput.id === `name` ) {
             // NAME INPUT
             if ( testInputValue.length === 0 ) {
-                invalid(label, testInput, `Name:* (This field cannot be left blank)`);
+                invalid(testInput, `Name:* (This field cannot be left blank)`);
                 return false;
             } else if ( testInputValue === "" ) {
-                invalid(label, testInput, `Name:* (This field cannot be left blank)`);
+                invalid(testInput, `Name:* (This field cannot be left blank)`);
                 return false;
             }  else {
-                valid(label, testInput, `Name:`);
-                label.appendChild(required);
+                valid(testInput, `Name:`);
                 return true;
             }
         }
