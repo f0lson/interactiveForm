@@ -92,8 +92,12 @@ const invalidForm = () => {
 }
 // function for real-time validation on input elements
 const realTimeValidation = ( element ) => {
+    // attaching a keyup event handler to whatever element is passed in
     element.addEventListener(`keyup`, () => {
         let elementValue = element.value;
+        // below are all of the validation tests for each potential input
+        // if they're valid, they'll receive valid styling
+        // if they're invalid, they'll receive invalid styling
         if ( element.type === `email` ) {
             let emailTest = (string) => {
                 return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
@@ -108,7 +112,7 @@ const realTimeValidation = ( element ) => {
         }
         if ( element.type === `text` ) {
             if ( element.id === `name` ) {
-                // NAME INPUT
+
                 if ( elementValue.length === 0 ) {
                     invalid(element, `Name:* (This field cannot be left blank)`);
                     return false;
@@ -158,6 +162,9 @@ const checkInputs = ( element ) => {
     let testInput = element;
     let testInputValue = testInput.value;
     let label = testInput.previousElementSibling;
+    // below are all of the validation tests for each potential input
+    // if they're valid, they'll receive valid styling
+    // if they're invalid, they'll receive invalid styling
     if ( testInput.type === `email` ) {
         let emailTest = (string) => {
             return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
@@ -523,9 +530,11 @@ registerBtn.addEventListener(`click`, (e) => {
         let ccNumTest = checkInputs(ccNum);
         let ccZipTest = checkInputs(ccZip);
         let ccCVVTest = checkInputs(ccCVV);
+        // if they all return valid, submit the form
         if ( nameTest && emailTest && designTest && activitiesTest && ccNumTest && ccZipTest && ccCVVTest ) {
             validForm();
         } else {
+            // otherwise the form is invalid
             invalidForm();
         }
     // no cc and no "other" job role
