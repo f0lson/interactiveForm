@@ -56,46 +56,44 @@ const subtractFromCost = ( number ) => {
     cost -= number;
     costSpan.textContent = cost;
 }
-// valid styling for inputs
+// marking an input as valid
 const valid = ( input, msg ) => {
     let parent = input.parentNode;
     let label = input.previousElementSibling;
-    label.style.color = `#000`;
-    label.innerHTML = msg;
-    input.style.borderColor = validGreen;
-    label.appendChild(required);
     parent.classList.remove(`real-time-invalid`);
     parent.classList.add(`real-time-valid`);
+    label.innerHTML = msg;
+    label.style.color = `#000`;
+    label.appendChild(required);
+    input.style.borderColor = validGreen;
 }
-
+// marking an input as invalid
 const invalid = ( input, msg ) => {
     let parent = input.parentNode;
     let label = input.previousElementSibling;
+    parent.classList.remove(`real-time-valid`);
+    parent.classList.add(`real-time-invalid`);
     label.style.color = errorRed;
     label.innerHTML = msg;
     input.style.borderColor = errorRed;
-    parent.classList.remove(`real-time-valid`);
-    parent.classList.add(`real-time-invalid`);
 }
-
+// will submit form when all tests return valid
 const validForm = () => {
     alert(`You've successfully registered!`);
     registerBtn.classList.remove(`invalid-btn`);
     form.submit();
 }
-
+// error msg and submit btn error animation
 const invalidForm = () => {
     registerBtn.classList.add(`invalid-btn`);
     registerBtn.addEventListener(`animationend`, () => {
         registerBtn.classList.remove(`invalid-btn`);
     });
 }
-
-
+// function for real-time validation on input elements
 const realTimeValidation = ( element ) => {
     element.addEventListener(`keyup`, () => {
         let elementValue = element.value;
-
         if ( element.type === `email` ) {
             let emailTest = (string) => {
                 return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string);
@@ -125,7 +123,6 @@ const realTimeValidation = ( element ) => {
                     valid(element, `Card Number:`);
                     return true;
                 } else {
-                    //UPDATE WITH iNVALID FUNCTION
                     element.placeholder = `Must be a 13-16 digit number`;
                     invalid(element, `Card Number:*`);
                     return false;
@@ -146,7 +143,6 @@ const realTimeValidation = ( element ) => {
                 let ccCVVTest = (string) => { return /^\d{3}$/.test(string);}
                 if ( ccCVVTest(elementValue) ) {
                     valid(element, `CVV:`);
-                    label.appendChild(required);
                 } else {
                     invalid(element, `CVV:*`);
                     element.placeholder = `Must be 3 digits`;
@@ -158,8 +154,6 @@ const realTimeValidation = ( element ) => {
 }
 
 // function to check if the input fields are valid
-// will return true if input = valid
-// will return false if input = invalid
 const checkInputs = ( element ) => {
     let testInput = element;
     let testInputValue = testInput.value;
@@ -181,7 +175,7 @@ const checkInputs = ( element ) => {
     }
     if ( testInput.type === `text` ) {
         if ( testInput.id === `name` ) {
-            // NAME INPUT
+            //
             if ( testInputValue.length === 0 ) {
                 invalid(testInput, `Name:* (This field cannot be left blank)`);
                 return false;
@@ -193,37 +187,24 @@ const checkInputs = ( element ) => {
                 return true;
             }
         }
-        if ( testInput.id === `other-title` ) {
-            let jobRoleLabel = document.querySelector(`label[for=title]`);
-            if ( testInputValue.length === 0 || testInputValue === ` ` ) {
-                invalid(jobRoleLabel, testInput, `Job Role:* (Please specify your job role)`);
-                return false;
-            } else {
-                valid(jobRoleLabel, testInput, `Job Role:`);
-                jobRoleLabel.appendChild(required);
-                return true;
-            }
-        }
         if ( testInput.id === `cc-num` ) {
             let ccNumTest = (string) => {return /(^\d{13,16}$)/.test(string)};
             if ( ccNumTest(testInputValue) ) {
-                valid(label, testInput, `Card Number:`);
-                label.appendChild(required);
+                valid(testInput, `Card Number:`);
                 return true;
             } else {
                 testInput.placeholder = `Must be a 13-16 digit number`;
-                invalid(label, testInput, `Card Number:*`);
+                invalid(testInput, `Card Number:*`);
                 return false;
             }
         }
         if ( testInput.id === `zip`) {
             let ccZipTest = (string) => {return /^\d{5}$/.test(string);}
             if ( ccZipTest(testInputValue) ) {
-                valid(label, testInput, `Zip Code:`);
-                label.appendChild(required);
+                valid(testInput, `Zip Code:`);
                 return true;
             } else {
-                invalid(label, testInput, `Zip Code: *`);
+                invalid(testInput, `Zip Code: *`);
                 testInput.placeholder = `Must be 5 digits`;
                 return false;
             }
@@ -231,11 +212,10 @@ const checkInputs = ( element ) => {
         if ( testInput.id === `cvv` ) {
             let ccCVVTest = (string) => { return /^\d{3}$/.test(string);}
             if ( ccCVVTest(testInputValue) ) {
-                valid(label, testInput, `CVV:`);
-                label.appendChild(required);
+                valid(testInput, `CVV:`);
                 return true;
             } else {
-                invalid(label, testInput, `CVV:`);
+                invalid(testInput, `CVV:*`);
                 testInput.placeholder = `Must be 3 digits`;
                 return false;
             }
@@ -244,7 +224,7 @@ const checkInputs = ( element ) => {
 }
 
 // check to see if the user has selected a t-shirt design
-let checkDesign = () => {
+const checkDesign = () => {
     // store a reference to the design label
     let designLabel = designSelect.previousElementSibling;
     // if the design select is at index 0:
@@ -335,38 +315,37 @@ realTimeValidation(ccNum);
 realTimeValidation(ccZip);
 realTimeValidation(ccCVV);
 
-// -------------------------------------
-// FORM CHANGE EVENT HANDLER
-// -------------------------------------
+//===============================
+// Event Handlers
+//===============================
 
 // on the change event
 form.addEventListener(`change`, (e) => {
     // if the id of the target element = id of the userTitle select:
     if (e.target.id === userTitle.id) {
-        // storing the value of the select
-        let value = e.target.value;
         // if the value is `other` then:
-        if ( value.toLowerCase() === `other` ) {
+        if ( userTitle.selectedIndex === 5 ) {
             // show the other job role input
             showElement(otherJobInput, `block`);
-        } else if ( value.toLowerCase() !== `other` ) {
+        } else if ( userTitle.selectedIndex !== 5 ) {
+            let jobLabel = document.querySelector(`label[for=title]`);
+            jobLabel.style.color = `#000`;
+            jobLabel.textContent = `Job Role`;
+            jobLabel.appendChild(required);
             // hide the other job input
             if ( otherJobInput ) {
                 hideElement(otherJobInput);
             }
         }
     }
-
     // t-shirt select
     if ( e.target.id === designSelect.id ) {
         let colorSelect = document.querySelector(`#color`);
         let colorOptions = colorSelect.children;
-
         // hide all of the options
         for (var i = 0; i < colorOptions.length; i++) {
             colorOptions[i].style.display = `none`;
         }
-
         // if the select`s value = js puns
         if ( e.target.value === `js puns` ) {
             // remove the `is-hidden` class on
@@ -409,25 +388,18 @@ form.addEventListener(`change`, (e) => {
     let buildTools = activityCheckboxes[5];
     let npm = activityCheckboxes[6];
 
-    // -------------------------------------
-    // Activities
-    // -------------------------------------
-
+    // Activities:
     // if the element is changed and the type = checkbox, then:
     if ( e.target.type === `checkbox` ) {
-
         // store a reference to the specific checkbox
         let checkbox = e.target;
         // store the boolean value of whether or not the box is checked
         // should return true if the box has been checked and false if it has not
         let checked = checkbox.checked;
-
         // if box = checked do the following:
         if ( checked ) {
-
             // show the cost element
             showElement(costP, `block`);
-
             // if js frameworks is checked
             if ( e.target.name === `js-frameworks`) {
                 // disable conflicting activity
@@ -509,10 +481,7 @@ form.addEventListener(`change`, (e) => {
     if ( cost === 0 ) {
         hideElement(costP);
     }
-
-    // -------------------------------------
-    // Payment
-    // -------------------------------------
+    // payment section
     if ( e.target.id === paymentSelect.id ) {
         // if the payment select's value is set to credit card:
         if ( e.target.value === `credit card` ) {
@@ -549,8 +518,8 @@ registerBtn.addEventListener(`click`, (e) => {
     let activitiesTest = checkActivities();
     let designTest = checkDesign();
 
-    // CC selected but didn't select "Other" for job role
-    if ( paymentSelect.selectedIndex === 1 && userTitle.selectedIndex !== 5 ) {
+    // cc selected
+    if ( paymentSelect.selectedIndex === 1 ) {
         let ccNumTest = checkInputs(ccNum);
         let ccZipTest = checkInputs(ccZip);
         let ccCVVTest = checkInputs(ccCVV);
@@ -559,28 +528,9 @@ registerBtn.addEventListener(`click`, (e) => {
         } else {
             invalidForm();
         }
-    // no cc and no other job role
-    } else if ( paymentSelect.selectedIndex !== 1 && userTitle.selectedIndex !== 5) {
+    // no cc and no "other" job role
+    } else if ( paymentSelect.selectedIndex !== 1 ) {
         if ( nameTest && emailTest && designTest && activitiesTest ) {
-            validForm();
-        } else {
-            invalidForm();
-        }
-    // other job but not credit card
-    } else if ( paymentSelect.selectedIndex !== 1 && userTitle.selectedIndex === 5 ){
-        let otherJobTest = checkInputs(otherJobInput);
-        if ( nameTest && emailTest && designTest && activitiesTest && otherJobTest) {
-            validForm();
-        } else {
-            invalidForm();
-        }
-    // CC & Other Job selected
-    } else if ( paymentSelect.selectedIndex === 1 && userTitle.selectedIndex === 5 ){
-        let ccNumTest = checkInputs(ccNum);
-        let ccZipTest = checkInputs(ccZip);
-        let ccCVVTest = checkInputs(ccCVV);
-        let otherJobTest = checkInputs(otherJobInput);
-        if ( nameTest && emailTest && designTest && activitiesTest && otherJobTest && ccNumTest && ccZipTest && ccCVVTest ) {
             validForm();
         } else {
             invalidForm();
